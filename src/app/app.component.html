@@ -1,3 +1,59 @@
-<h1>
-  {{title}}
-</h1>
+<div class="demo-toolbar">
+
+  <p>
+    <md-toolbar>
+      <md-icon class="demo-toolbar-icon">menu</md-icon>
+      <span>Default Toolbar</span>
+
+      <span class="demo-fill-remaining"></span>
+
+      <md-icon>code</md-icon>
+    </md-toolbar>
+  </p>
+</div>
+  
+<md-toolbar color="primary">
+  <span>{{title}}</span>
+  <md-icon class="demo-toolbar-icon">menu</md-icon>
+
+  <!-- This fills the remaining space of the current row -->
+  <span class="demo-fill-remaining"></span>
+
+  <!--<md-icon class="demo-toolbar-icon" mdTooltip="Copy">note_add</md-icon>  
+  <md-icon class="demo-toolbar-icon" mdTooltip="Save">save</md-icon>  
+
+  <md-icon class="demo-toolbar-icon" mdTooltip="Copy">content_copy</md-icon>  
+  <md-icon class="demo-toolbar-icon" mdTooltip="Paste">content_paste</md-icon>  
+  <md-icon class="demo-toolbar-icon" mdTooltip="Undo">undo</md-icon>  
+  <md-icon class="demo-toolbar-icon" mdTooltip="Redo">redo</md-icon>  
+
+  <md-icon class="demo-toolbar-icon" mdTooltip="Insert Text">text_fields</md-icon>  
+  <md-icon class="demo-toolbar-icon" mdTooltip="Insert Photo">insert_photo</md-icon>  
+  <md-icon class="demo-toolbar-icon" mdTooltip="Share URL">link</md-icon>  
+
+  <md-icon class="demo-toolbar-icon" mdTooltip="Styles">color_lens</md-icon>  
+  <md-icon class="demo-toolbar-icon" (click)="openDialog()" mdTooltip="Print">print</md-icon>  
+  <md-icon class="demo-toolbar-icon" mdTooltip="Help">live_help</md-icon>  
+  -->
+
+      <md-icon>code</md-icon>  
+</md-toolbar>
+<md-grid-list cols="1" rowHeight="100px">
+  <md-grid-tile colspan="1" rowspan="2" style.background="#DDBDF1">
+    <md-input-container class="example-full">
+      <textarea id="cy_editor" rows="9" style="border: solid" mdInput placeholder="Cypher Editor">
+&nbsp;</textarea>
+    </md-input-container>
+  </md-grid-tile>
+  <md-grid-tile colspan="1" rowspan="6" style.background="#DDBDF1">
+  <div id="cy" style="padding: 10px 5px 5px 10px; width: 95%; height:95%; border:solid">Cytoscape Area</div>
+  </md-grid-tile>
+  <md-grid-tile colspan="1" rowspan="1" style.background="#DDBDF1">
+    <p>tile#3</p>
+    <p>Result from dialog: {{ result }}</p>
+  </md-grid-tile>
+</md-grid-list>
+
+
+
+
