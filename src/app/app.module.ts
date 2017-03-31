@@ -7,7 +7,10 @@ import 'hammerjs';
 
 import { AppComponent } from './app.component';
 import { ImgViewerComponent } from './components/dialogs/img-viewer/img-viewer.component';
+
 import { DialogsService } from './services/dialogs.service';
+
+import { WindowRef } from './services/window-ref';
 
 @NgModule({
   declarations: [
@@ -20,9 +23,18 @@ import { DialogsService } from './services/dialogs.service';
     HttpModule,
     MaterialModule
   ],
-  exports: [ ImgViewerComponent ],
-  entryComponents: [ ImgViewerComponent ],
-  providers: [ DialogsService ],
-  bootstrap: [ AppComponent ]
+  exports: [
+    ImgViewerComponent
+  ],
+  providers: [
+    DialogsService,
+    WindowRef
+  ],
+  entryComponents: [ 
+    ImgViewerComponent 
+  ],
+  bootstrap: [
+    AppComponent
+  ]
 })
 export class AppModule { }

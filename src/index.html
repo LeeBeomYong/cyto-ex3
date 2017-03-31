@@ -8,11 +8,262 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  <!-- FontAwesome for md-icon demo. -->
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">  
-  
+
+  <link rel="stylesheet" type="text/css" href="assets/css/jquery.qtip.min.css" />
+  <link rel="stylesheet" type="text/css" href="assets/css/font-awesome.min.css" />
+  <!--<link rel="stylesheet" type="text/css" href="assets/css/cytoscape.js-navigator.css" />-->
+  <link rel="stylesheet" type="text/css" href="assets/css/cytoscape.js-panzoom.css" />
+
+  <script type="text/javascript" src="assets/js/jquery.min.js"></script>
+  <script type="text/javascript" src="assets/js/cytoscape.min.js"></script>
+  <!-- Cytoscape.js: PlugIns -->
+  <script type="text/javascript" src="assets/js/jquery.qtip.min.js"></script>
+  <script type="text/javascript" src="assets/js/cytoscape-qtip.js"></script>
+  <script type="text/javascript" src="assets/js/cytoscape-cxtmenu.js"></script>
+  <script type="text/javascript" src="assets/js/cytoscape-automove.js"></script>
+  <script type="text/javascript" src="assets/js/cytoscape-edgehandles.js"></script>
+  <!--<script type="text/javascript" src="assets/js/cytoscape-navigator.js"></script>-->
+  <script type="text/javascript" src="assets/js/cytoscape-panzoom.js"></script>
+  <script type="text/javascript" src="assets/js/cytoscape-view-utilities.js"></script>
+  <!-- Cytoscape.js: Layouts -->
+  <script type="text/javascript" src="assets/js/cytoscape-cose-bilkent.js"></script>
+  <script type="text/javascript" src="assets/js/cola.js"></script>
+  <script type="text/javascript" src="assets/js/cytoscape-cola.js"></script> 
+  <script type="text/javascript" src="assets/js/dagre.js"></script>
+  <script type="text/javascript" src="assets/js/cytoscape-dagre.js"></script>   
 </head>
 <body>
   <app-root>Loading...</app-root>
+
+  <script>
+  $(function(){
+    if( window.cy === undefined ) window.cy = {}
+
+    var selectedNode = window.selectedNode = null;
+
+    var cy = window.cy = cytoscape({
+      container: $('div#cy'),  //document.getElementById('cy'),
+      boxSelectionEnabled: true,
+      autounselectify: false,
+      ready: function(){
+			},
+
+      style: cytoscape.stylesheet()
+        .selector('node')
+          .css({
+            'content': 'data(id)',
+            'text-opacity': 0.5,
+            'text-valign': 'center',
+            'text-halign': 'right',
+            'background-color': '#11479e'            
+          })
+        .selector('edge')
+          .css({
+            'target-arrow-shape': 'triangle',
+            'width': 4,
+            'line-color': '#9dbaea',
+            'target-arrow-color': '#9dbaea',            
+            'curve-style': 'bezier'
+          })
+        .selector('.highlighted')
+          .css({
+            'background-color': '#61bffc',
+            'line-color': '#61bffc',
+            'target-arrow-color': '#61bffc',
+            'transition-property': 'background-color, line-color, target-arrow-color',
+            'transition-duration': '0.2s'
+          })
+        .selector('.traveled')
+          .css({
+            'background-color': '#11bf1c',
+            'line-color': '#11bf1c',
+            'target-arrow-color': '#11bf1c',
+            'transition-property': 'background-color, line-color, target-arrow-color',
+            'transition-duration': '0.2s'
+          })
+        .selector(':selected')
+          .css({
+            'background-color': 'black',
+            'line-color': 'black',
+            'target-arrow-color': 'black',
+            'source-arrow-color': 'black',
+            'text-outline-color': 'black'
+          })
+				// some style for the ext
+        .selector('.edgehandles-hover')
+          .css({
+						'background-color': 'red'
+          })
+        .selector('.edgehandles-source')
+          .css({
+            'border-width': 2,
+            'border-color': 'red'
+          })
+        .selector('.edgehandles-target')
+          .css({
+            'border-width': 2,
+            'border-color': 'red'
+          })
+        .selector('.edgehandles-preview, .edgehandles-ghost-edge')
+          .css({
+            'line-color': 'red',
+            'target-arrow-color': 'red',
+            'source-arrow-color': 'red'
+          })
+      ,      
+      elements: {
+          nodes: [
+            { data: { id: 'a', name: 'node A', href: 'http://js.cytoscape.org#a' }, selectable: true, selected: false },
+            { data: { id: 'b', name: 'node B', href: 'http://js.cytoscape.org#b' }, selectable: true, selected: false },
+            { data: { id: 'c', name: 'node C', href: 'http://js.cytoscape.org#c' }, selectable: true, selected: false },
+            { data: { id: 'd', name: 'node D', href: 'http://js.cytoscape.org#d' }, selectable: true, selected: false },
+            { data: { id: 'e', name: 'node E', href: 'http://js.cytoscape.org#e' }, selectable: true, selected: false }
+          ],           
+          edges: [
+            { data: { id: 'a"e', name: 'edge AE', weight: 1, source: 'a', target: 'e' } },
+            { data: { id: 'ab', name: 'edge AB', weight: 3, source: 'a', target: 'b' } },
+            { data: { id: 'be', name: 'edge BE', weight: 4, source: 'b', target: 'e' } },
+            { data: { id: 'bc', name: 'edge BC', weight: 5, source: 'b', target: 'c' } },
+            { data: { id: 'ce', name: 'edge CE', weight: 6, source: 'c', target: 'e' } },
+            { data: { id: 'cd', name: 'edge CD', weight: 2, source: 'c', target: 'd' } },
+            { data: { id: 'de', name: 'edge DE', weight: 7, source: 'd', target: 'e' } }
+          ]
+        },
+      
+      layout: {
+        name: 'grid',
+        cols: 3, rows: 2
+      }
+    });
+
+    // just use the regular qtip api but on cy elements
+    cy.elements().qtip({
+      content: function(){ return 'Example qTip on ele ' + this.id() },
+      position: {
+        my: 'bottom left',  // Position my top left...
+        at: 'top right', // at the bottom right of...
+      },
+      style: {
+        classes: 'qtip-tipsy qtip-shadow qtip-rounded',
+        tip: {
+          width: 16,
+          height: 8
+        }
+      }
+    });
+
+
+    // cxt menu for node
+    cy.cxtmenu({
+      selector: 'node',
+      commands: [
+        {
+          content: '<span class="fa fa-flash fa-2x"></span><span>id</span>',
+          select: function(ele){
+            console.log( ele.id() );
+          }
+        },{
+          content: '<span class="fa fa-star fa-2x"></span><span>name</span>',
+          select: function(ele){
+            console.log( ele.data('name') );
+          }
+          //, disabled: true
+        },{
+          content: 'position',
+          select: function(ele){
+            console.log( ele.position() );
+          }
+        },{
+          content: 'hide',
+          select: function(ele){
+            api.hide( ele );
+          }
+        }
+      ]
+    });
+    // cxt menu for edge
+    cy.cxtmenu({
+      selector: 'edge',
+      commands: [
+        {
+          content: '<span class="fa fa-flash fa-2x"></span><span>id</span>',
+          select: function(ele){
+            console.log( ele.id() );
+          }
+        },{
+          content: '<span class="fa fa-star fa-2x"></span><span>name</span>',
+          select: function(ele){
+            console.log( ele.data('name') );
+          },
+          disabled: true
+        },{
+          content: 'remove',
+          select: function(ele){
+            ele.remove();
+          }
+        }
+      ]
+    });
+
+    // on&off control: cy.edgehandles('enable') or cy.edgehandles('disable')
+    cy.edgehandles({
+      toggleOffOnLeave: true,
+      handleNodes: "node",
+      handleSize: 10,
+      edgeType: function(){ return 'flat'; }
+    });
+
+    // view utilities for cy
+    var api = window.cy_api = cy.viewUtilities({
+        neighbor: function(node){
+            return node.closedNeighborhood();
+        },
+        neighborSelectTime: 1000
+    });
+    
+    cy.panzoom({
+			// options here...
+		});
+
+    cy.fit( cy.elements(), 50 ); // fit to all the layouts
+    cy.automove({
+      nodesMatching: function(){ return true },
+      reposition: 'viewport'    // or function(node){}
+    });
+
+    // ==========================================
+    // ==  cy events
+    // ==========================================
+    cy.on('tap', function(e){
+      if( e.cyTarget === cy ){
+        api.removeHighlights();
+        cy.$(':selected').unselect();
+        pivotNode = window.pivotNode = null;
+      }
+    });
+    cy.on('tap', 'node', function(e){
+      // console.log('event: click node #'+e.cyTarget.id()+' (selected='+e.cyTarget.selected()+')');
+      pivotNode = window.pivotNode = e.cyTarget;
+      api.removeHighlights();
+      api.highlightNeighbors( e.cyTarget );
+    });
+    cy.on('mouseover', 'node', function(e){
+      this.addClass('highlighted');
+    });
+    cy.on('mouseout', 'node', function(e){
+      this.removeClass('highlighted');
+    });
+    // cy.on('select', 'node', function(e){
+    //   console.log( 'event: node select ==>');
+    //   console.log( cy.$('node:selected') );
+    // });
+
+    if( window.graph === undefined ) window.graph = {}
+    window.graph['title'] = 'ABCD';
+    console.log( window.graph['title'] );
+
+  });
+  </script>
+
 </body>
 </html>
