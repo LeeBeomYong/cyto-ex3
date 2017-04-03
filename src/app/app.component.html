@@ -1,5 +1,8 @@
 <div class="demo-toolbar">
   <md-toolbar color="primary">
+    <button md-icon-button mdTooltip="Repaint" (click)="cyRepaint()">
+      <md-icon class="md-24">clear_all</md-icon>  
+    </button>
     <span>Layouts
     <!--<md-select color="primary" placeholder="Select a layout">
       <md-option *ngFor="let food of foods" [value]="food.value" [selected]="index == 1">
@@ -26,10 +29,10 @@
     <button md-icon-button mdTooltip="Paste">
       <md-icon class="md-24">content_paste</md-icon>  
     </button>
-    <button md-icon-button mdTooltip="Undo">
+    <button md-icon-button mdTooltip="Undo (Ctrl+Z)" (click)="cyUndo()">
       <md-icon class="md-24">undo</md-icon>  
     </button>
-    <button md-icon-button mdTooltip="Redo">
+    <button md-icon-button mdTooltip="Redo (Ctrl+Y)" (click)="cyRedo()">
       <md-icon class="md-24">redo</md-icon>  
     </button>
     <button md-icon-button mdTooltip="Insert Text">

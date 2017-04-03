@@ -18,16 +18,13 @@ export class AppComponent {
   window: any;
   cy_saved: any;
 
-  foods = [
-    {value: 'steak-0', viewValue: 'Steak'},
-    {value: 'pizza-1', viewValue: 'Pizza'},
-    {value: 'tacos-2', viewValue: 'Tacos'}
-  ];
   // Layout Options
   layoutTypes = [
     {
       name: 'grid',
-      cols: 3, rows: 2
+      // cols: 3, rows: 2,
+      avoidOverlap: true, // prevents node overlap, may overflow boundingBox if not enough space
+      avoidOverlapPadding: 10, // extra spacing around nodes when avoidOverlap: true      
     },{
       name: 'random',      
     },{
@@ -36,16 +33,30 @@ export class AppComponent {
       roots: '#a'
     },{
       name: 'circle',
+      condense: false
     },{
-      name: 'cola',      
+      name: 'cola',  
+      condense: false    
     },{
       name: 'concentric',      
+      condense: false,
+      avoidOverlap: true,
+      minNodeSpacing: 10,
+      concentric: function( node ){ // returns numeric value for each node, placing higher nodes in levels towards the centre
+        return node.degree();
+      },
+      levelWidth: function( nodes ){ // the variation of concentric values in each level
+        return nodes.maxDegree() / 4;
+      },
     },{
-      name: 'cose',      
+      name: 'cose',  
+      condense: false    
     },{
       name: 'cose-bilkent',      
+      condense: false
     },{
       name: 'dagre',
+      condense: false
     }
   ];
   selectedLayout = this.layoutTypes[0];
@@ -59,8 +70,11 @@ export class AppComponent {
   }
 
   public openDialog() {
+    if( this.window.cy === undefined ) return;
+
+    var png64 = this.window.cy.png();    
     this.dialogsService
-      .confirm('Confirm Dialog', 'Are you sure you want to do this?')
+      .confirm('png', png64)
       .subscribe(res => this.result = res);
   }
 
@@ -121,6 +135,19 @@ export class AppComponent {
     var png64 = this.window.cy.png();
     // $('img#output').attr('src', png64);
     // this.modalService.open('custom-modal-1');
+  }
+
+  cyUndo(): void{
+    if( this.window.cyUr === undefined ) return;
+    this.window.cyUr.undo();
+  }
+  cyRedo(): void{
+    if( this.window.cyUr === undefined ) return;
+    this.window.cyUr.redo();
+  }
+  cyRepaint(): void{
+    if( this.window.cy === undefined ) return;
+    this.window.cy.forceRender();
   }
   
 }

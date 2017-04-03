@@ -10,13 +10,13 @@ export class DialogsService {
   constructor(private dialog: MdDialog){     
   }
 
-  public confirm(title: string, message: string): Observable<boolean> {
+  public confirm(imgType: string, imgSrc: any): Observable<boolean> {
 
     let dialogRef: MdDialogRef<ImgViewerComponent>;
 
     dialogRef = this.dialog.open(ImgViewerComponent);
-    dialogRef.componentInstance.title = title;
-    dialogRef.componentInstance.message = message;
+    dialogRef.componentInstance.imgType = imgSrc;
+    dialogRef.componentInstance.imgSrc = imgSrc;
 
     return dialogRef.afterClosed();
   }

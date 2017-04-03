@@ -24,6 +24,7 @@
   <script type="text/javascript" src="assets/js/cytoscape-edgehandles.js"></script>
   <!--<script type="text/javascript" src="assets/js/cytoscape-navigator.js"></script>-->
   <script type="text/javascript" src="assets/js/cytoscape-panzoom.js"></script>
+  <script type="text/javascript" src="assets/js/cytoscape-undo-redo.js"></script>
   <script type="text/javascript" src="assets/js/cytoscape-view-utilities.js"></script>
   <!-- Cytoscape.js: Layouts -->
   <script type="text/javascript" src="assets/js/cytoscape-cose-bilkent.js"></script>
@@ -39,7 +40,7 @@
   $(function(){
     if( window.cy === undefined ) window.cy = {}
 
-    var selectedNode = window.selectedNode = null;
+    var pivotNode = window.pivotNode = null;
 
     var cy = window.cy = cytoscape({
       container: $('div#cy'),  //document.getElementById('cy'),
@@ -132,7 +133,9 @@
       
       layout: {
         name: 'grid',
-        cols: 3, rows: 2
+        avoidOverlap: true, 
+        avoidOverlapPadding: 10, 
+        condense: false,    // if true: Node 크기가 커짐 (다른 레이아웃 연관성 찾아야 함)
       }
     });
 
@@ -152,54 +155,58 @@
       }
     });
 
-
     // cxt menu for node
     cy.cxtmenu({
-      selector: 'node',
+      selector: 'node, edge',
+      menuRadius: 80,
+      fillColor: 'rgba(50, 0, 0, 0.65)',
       commands: [
         {
-          content: '<span class="fa fa-flash fa-2x"></span><span>id</span>',
+          content: '<span>Styles</span>',
           select: function(ele){
             console.log( ele.id() );
           }
         },{
-          content: '<span class="fa fa-star fa-2x"></span><span>name</span>',
+          content: '<span>Properties</span>',
           select: function(ele){
             console.log( ele.data('name') );
           }
           //, disabled: true
         },{
-          content: 'position',
+          content: '<span>remove</span>',
           select: function(ele){
-            console.log( ele.position() );
+            cy.$(":selected").remove();
           }
         },{
-          content: 'hide',
-          select: function(ele){
-            api.hide( ele );
+          content: '<span>hide</span>',
+          select: function(){
+            api.hide(cy.$(":selected"));
           }
         }
       ]
     });
+
     // cxt menu for edge
     cy.cxtmenu({
-      selector: 'edge',
+      menuRadius: 80,
+      selector: 'core',
+      fillColor: 'rgba(0, 60, 0, 0.65)',
       commands: [
         {
-          content: '<span class="fa fa-flash fa-2x"></span><span>id</span>',
-          select: function(ele){
-            console.log( ele.id() );
+          content: '<span>add Node</span>',
+          select: function(){
+            addNode();
           }
         },{
-          content: '<span class="fa fa-star fa-2x"></span><span>name</span>',
-          select: function(ele){
-            console.log( ele.data('name') );
+          content: '<span>show All</span>',
+          select: function(){
+            api.show(cy.elements());
           },
-          disabled: true
+          //disabled: true
         },{
-          content: 'remove',
-          select: function(ele){
-            ele.remove();
+          content: '<span>select Theme</span>',
+          select: function(){
+            console.log("Menu: select Theme")
           }
         }
       ]
@@ -214,13 +221,14 @@
     });
 
     // view utilities for cy
-    var api = window.cy_api = cy.viewUtilities({
+    var api = window.cyApi = cy.viewUtilities({
         neighbor: function(node){
             return node.closedNeighborhood();
         },
         neighborSelectTime: 1000
     });
-    
+    var ur = window.cyUr = cy.undoRedo();
+
     cy.panzoom({
 			// options here...
 		});
@@ -235,6 +243,7 @@
     // ==  cy events
     // ==========================================
     cy.on('tap', function(e){
+      // console.log( cyPosition );
       if( e.cyTarget === cy ){
         api.removeHighlights();
         cy.$(':selected').unselect();
@@ -242,7 +251,6 @@
       }
     });
     cy.on('tap', 'node', function(e){
-      // console.log('event: click node #'+e.cyTarget.id()+' (selected='+e.cyTarget.selected()+')');
       pivotNode = window.pivotNode = e.cyTarget;
       api.removeHighlights();
       api.highlightNeighbors( e.cyTarget );
@@ -253,6 +261,9 @@
     cy.on('mouseout', 'node', function(e){
       this.removeClass('highlighted');
     });
+    cy.on('cxttapstart', function(e){
+      var cyPosition = window.cyPosition = e.cyPosition;
+    });
     // cy.on('select', 'node', function(e){
     //   console.log( 'event: node select ==>');
     //   console.log( cy.$('node:selected') );
@@ -261,8 +272,41 @@
     if( window.graph === undefined ) window.graph = {}
     window.graph['title'] = 'ABCD';
     console.log( window.graph['title'] );
-
   });
+
+  var addNode = function(){
+    var node = { // node n1
+      group: 'nodes', // 'nodes' for a node, 'edges' for an edge
+      data: { // element data (put json serialisable dev data here)
+        id: makeid(), // mandatory (string or number) id for each element, assigned automatically on undefined
+        parent: 'nparent', // indicates the compound node parent id; not defined => no parent
+      },
+      scratch: {
+        foo: 'bar'
+      },
+      position: { // the model position of the node (optional on init, mandatory after)
+        x: cyPosition.x,
+        y: cyPosition.y
+      },
+      selected: false, // whether the element is selected (default false)
+      selectable: true, // whether the selection state is mutable (default true)
+      locked: false, // when locked a node's position is immutable (default false)
+      grabbable: true, // whether the node can be grabbed and moved by the user
+      classes: 'foo bar' // a space separated list of class names that the element has
+    };
+    cy.add( node );
+  };
+
+  var makeid = function(){
+    var text = "";
+    var possible = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for( var i=0; i < 5; i++ )
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+    return text;
+  }
+
   </script>
 
 </body>
