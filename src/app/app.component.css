@@ -1,38 +1,49 @@
+.cyto-wrapper {
+  margin: 5px;
+  height: 98vh;
+  display: flex;
+  /* Direction of the items, can be row or column */
+  flex-direction: column;
+}
+.cyto-header {
+  height: 64px;
+  padding: 0 0 5px 0;
+}
+.cyto-footer {
+  padding: 5px;
+  height: 40px;
+  /*background-color: rgba(10, 10, 10, 0.5);*/
+  /*border: 1px solid rgba(0, 0, 0, 0.5);*/
+}
+.cyto-main {
+  padding: 5px;
+  flex: 1;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+}
+
 /* toolbar */
-.demo-toolbar {
+md-toolbar {
 	padding: 6px;
 }
-.demo-toolbar .demo-toolbar-icon {
-	padding: 0 14px;
-}
-.demo-toolbar .demo-fill-remaining {
+.toolbar-fill-remaining {
 	flex: 1 1 auto;
 }
-.md-icon-button {
-  min-width: 1%;
-}
-md-select {
+select {
   background-color: white;
 }
-/*md-option:focus{
+option:focus{
   background-color: white;
   color: black;
-}*/
-
-.example-full {
-  padding: 10px 5px 5px 10px; 
-  width: 95%;
-  height: 90%;
 }
 
-textarea#cy_editor {
+
+textarea#editor {
   border: solid;
 }
 
 div#cy {
-  /* padding : top, right, bottom, left */
-  padding: 5px 10px 5px 10px; 
-  /*width: 90%;*/
-  height:600px; 
-  border:solid;
+  width: 96vw;
+  height: 80vh;
+  /*background-color: green;*/
 }
+

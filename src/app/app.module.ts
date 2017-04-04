@@ -7,21 +7,26 @@ import 'hammerjs';
 
 import { AppComponent } from './app.component';
 import { ImgViewerComponent } from './components/dialogs/img-viewer/img-viewer.component';
+import { CySytlesComponent } from './components/dialogs/cy-sytles/cy-sytles.component';
 
 import { DialogsService } from './services/dialogs.service';
 
 import { WindowRef } from './services/window-ref';
 
+import {ColorPickerModule} from 'angular2-color-picker';
+
 @NgModule({
   declarations: [
     AppComponent,
-    ImgViewerComponent
+    ImgViewerComponent,
+    CySytlesComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
     HttpModule,
-    MaterialModule
+    MaterialModule,
+    ColorPickerModule
   ],
   exports: [
     ImgViewerComponent
@@ -31,7 +36,8 @@ import { WindowRef } from './services/window-ref';
     WindowRef
   ],
   entryComponents: [ 
-    ImgViewerComponent 
+    ImgViewerComponent,
+    CySytlesComponent 
   ],
   bootstrap: [
     AppComponent

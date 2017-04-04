@@ -53,3 +53,12 @@
 .material-icons.md-light.md-inactive { color: rgba(255, 255, 255, 0.3); }
 
 .material-icons.orange600 { color: #FB8C00; }
+
+/*
+.mat-dialog-container {
+    top: inherit !important;
+    bottom: 0px;
+    left: 0px;
+    position: fixed;
+}
+*/

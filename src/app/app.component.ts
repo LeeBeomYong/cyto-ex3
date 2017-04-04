@@ -69,12 +69,20 @@ export class AppComponent {
     this.window = winRef.nativeWindow;
   }
 
-  public openDialog() {
+  public openCyStyles() {
+    if( this.window.cy === undefined ) return;
+
+    this.dialogsService
+      .dlgCyStyles(this.window.cy)
+      .subscribe(res => this.result = res);
+  }
+
+  public openImgViewer() {
     if( this.window.cy === undefined ) return;
 
     var png64 = this.window.cy.png();    
     this.dialogsService
-      .confirm('png', png64)
+      .dlgImgViewer('png', png64)
       .subscribe(res => this.result = res);
   }
 
@@ -147,6 +155,8 @@ export class AppComponent {
   }
   cyRepaint(): void{
     if( this.window.cy === undefined ) return;
+    this.window.cy.fit( this.window.cy.elements(), 50 );
+    this.window.cy.resize();
     this.window.cy.forceRender();
   }
   
