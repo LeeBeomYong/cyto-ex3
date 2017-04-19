@@ -1,5 +1,6 @@
 {
   "projects": {
-    "staging": "cyto-ex03"
+    "staging": "cyto-ex03",
+    "default": "cytoex3"
   }
 }
