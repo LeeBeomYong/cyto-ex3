@@ -6,9 +6,9 @@
 
     URL: https://cytoex3.firebaseapp.com/
 
-## 추가 내역
+## 추가할 기능
 
-1) 임의의 Vertex와 edge 생성하는 기능 츠가   
+1) 임의의 Vertex와 edge 생성하는 기능 추가   
 
 # CytoEx03
 
