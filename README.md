@@ -1,14 +1,14 @@
-# 2017년 4월 19일 수정 내역
+# 수정 내역
 
 1) Angular2에서 Angular4로 프로젝트를 내용을 변경
 
 2) 결과는 다음 URL에서 확인할 수 있음
 
-URL: https://cytoex3.firebaseapp.com/
+    URL: https://cytoex3.firebaseapp.com/
 
-# 기능추가
+## 추가 내역
 
-1)   
+1) 임의의 Vertex와 edge 생성하는 기능 츠가   
 
 # CytoEx03
 
