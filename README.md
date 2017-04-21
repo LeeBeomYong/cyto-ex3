@@ -4,11 +4,13 @@
 
 2) 결과는 다음 URL에서 확인할 수 있음
 
-    URL: https://cytoex3.firebaseapp.com/
+  URL: https://cytoex3.firebaseapp.com/
 
-## 추가할 기능
+## 기능 내역
 
-1) 임의의 Vertex와 edge 생성하는 기능 추가   
+1) 임의의 노드를 생성하는 기능   
+
+
 
 # CytoEx03
 
