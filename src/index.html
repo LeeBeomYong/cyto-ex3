@@ -37,13 +37,13 @@
   <app-root>Loading...</app-root>
 
   <script>
-  $(function(){
+  jQuery(function(){//$는 jQuery lib 사용 가능하는 의미, 래퍼 함수, 익명 함수, 모듈화, 바로 실행으로 인해 외부 침입을 방지
     if( window.cy === undefined ) window.cy = {}
 
-    var pivotNode = window.pivotNode = null;
+    var pivotNode = window.pivotNode = null;//초기화
 
     var cy = window.cy = cytoscape({
-      container: $('div#cy'),  //document.getElementById('cy'),
+      container: $('div#cy'),  //document.getElementById('cy'), #은 ID, .은 class를 의미
       boxSelectionEnabled: true,
       autounselectify: false,
       ready: function(){
@@ -307,7 +307,7 @@
     return text;
   }
 
-  </script>
 
+  </script>
 </body>
 </html>

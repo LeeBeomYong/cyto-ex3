@@ -6,7 +6,7 @@ import { MaterialModule } from '@angular/material';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import 'hammerjs';
 
-import { AppComponent } from './app.component';
+import { AppComponent, InputNodeCntDialog } from './app.component';
 import { ImgViewerComponent } from './components/dialogs/img-viewer/img-viewer.component';
 import { CySytlesComponent } from './components/dialogs/cy-sytles/cy-sytles.component';
 
@@ -20,7 +20,8 @@ import {ColorPickerModule} from 'angular2-color-picker';
   declarations: [
     AppComponent,
     ImgViewerComponent,
-    CySytlesComponent
+    CySytlesComponent,
+    InputNodeCntDialog
   ],
   imports: [
     BrowserModule,
@@ -37,9 +38,10 @@ import {ColorPickerModule} from 'angular2-color-picker';
     DialogsService,
     WindowRef
   ],
-  entryComponents: [ 
+  entryComponents: [
     ImgViewerComponent,
-    CySytlesComponent 
+    CySytlesComponent ,
+    InputNodeCntDialog
   ],
   bootstrap: [
     AppComponent

@@ -1,4 +1,5 @@
 import { Component, AfterViewInit, ElementRef } from '@angular/core';
+import {MdDialog, MdDialogRef} from '@angular/material';
 
 import { DialogsService } from './services/dialogs.service';
 
@@ -64,7 +65,8 @@ export class AppComponent {
   constructor(
     private eleRef: ElementRef,
     private winRef: WindowRef,
-    private dialogsService: DialogsService
+    private dialogsService: DialogsService,
+    public dialog: MdDialog
   ) { 
     this.window = winRef.nativeWindow;
   }
@@ -159,5 +161,109 @@ export class AppComponent {
     this.window.cy.resize();
     this.window.cy.forceRender();
   }
-  
+
+  createRandomGraph(): void{
+    if( this.window.cy === undefined ) return;
+
+    //입력창
+    var inputCntGraph = parseInt(prompt("생성할 노드 갯수를 입력하세요"));//문자열을 숫자로 형변환
+    //alert(typeof inputCntGraph);
+    
+    //모든 그래프 삭제
+    this.window.cy.elements().remove();
+
+    //그래프 생성
+    var vertex = [];
+
+    for(var i = 0; i < inputCntGraph; i++){
+      var temp = { 
+        group: "nodes",
+        data: {
+          id: "n"+i
+        },
+        position: {
+          x: Math.floor((Math.random()*1000)+1),
+          y: Math.floor((Math.random()*1000)+1)
+        }
+      }
+      vertex.push(temp);
+      //console.log("nodeID:"+temp.data.id+" point("+temp.position.x+" "+temp.position.y+")");
+    }
+    for(var j = 0; j < inputCntGraph; j++){
+      var eTemp = {
+        group: "edges",
+        data: {
+          id: "e"+j,
+          source: "n"+Math.floor((Math.random()*inputCntGraph-1)+1),
+          target: "n"+Math.floor((Math.random()*inputCntGraph-1)+1)
+        }
+      }
+      vertex.push(eTemp);
+      //console.log("edgeID:"+eTemp.data.id+" source:"+eTemp.data.source+" target:"+eTemp.data.target);
+    }
+    this.window.cy.add(vertex);
+    
+  }//crateRandomGraph()
+
+
+  inputCntNode(): void{
+    let inputCntGraph: Number;
+    let dialogRef = this.dialog.open(InputNodeCntDialog);
+    dialogRef.afterClosed().subscribe(result => {
+      inputCntGraph = parseInt(result);
+
+      //alert(typeof inputCntGraph);
+
+      //모든 그래프 삭제
+      this.window.cy.elements().remove();
+
+      //그래프 생성
+      var vertex = [];
+
+      //노드 생성
+      for(var i = 0; i < inputCntGraph; i++){
+        var temp = { 
+          group: "nodes",
+          data: {
+            id: "n"+i
+          },
+          position: {
+            x: Math.floor((Math.random()*1000)+1),
+            y: Math.floor((Math.random()*1000)+1)
+          }
+        }
+        vertex.push(temp);
+        //console.log("nodeID:"+temp.data.id+" point("+temp.position.x+" "+temp.position.y+")");
+      }
+      //관계 생성
+      for(var j = 0; j < inputCntGraph; j++){
+        var eTemp = {
+          group: "edges",
+          data: {
+            id: "e"+j,
+            source: "n"+Math.floor((Math.random()*+inputCntGraph-1)+1),//+inputCntGraph에서 +는 number로 형변환한다는 의미.
+            target: "n"+Math.floor((Math.random()*+inputCntGraph-1)+1)
+          }
+        }
+        vertex.push(eTemp);
+        //console.log("edgeID:"+eTemp.data.id+" source:"+eTemp.data.source+" target:"+eTemp.data.target);
+      }
+      this.window.cy.add(vertex);//화면에 추가
+      this.window.cy.fit();//모든 노드가 생성된 영역에 맞게 화면 맞추기
+    });
+  }
+}
+
+@Component({
+  template: `
+      <md-input-container>
+        <input mdInput #dialogInput maxlength="20" placeholder="노드 갯수는?">
+      </md-input-container>
+      <button md-raised-button (click)="dialogRef.close(dialogInput.value)">생성하기</button>
+  `,
+})
+export class InputNodeCntDialog{
+  constructor(public dialogRef: MdDialogRef<InputNodeCntDialog>){
+
+  }
 }
