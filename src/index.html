@@ -175,7 +175,7 @@
         },{
           content: '<span>remove</span>',
           select: function(ele){
-            cy.$(":selected").remove();
+            cy.$("#"+ele.id()).remove();
           }
         },{
           content: '<span>hide</span>',

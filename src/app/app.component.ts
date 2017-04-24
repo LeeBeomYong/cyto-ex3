@@ -206,50 +206,54 @@ export class AppComponent {
   }//crateRandomGraph()
 
 
-  inputCntNode(): void{
-    let inputCntGraph: Number;
+  inputCntNode(): void {
+    if( this.window.cy === undefined ) return;
+    
+    let inputCntGraph: any;
     let dialogRef = this.dialog.open(InputNodeCntDialog);
     dialogRef.afterClosed().subscribe(result => {
       inputCntGraph = parseInt(result);
-
-      //alert(typeof inputCntGraph);
+      console.log("inputCntGraph:"+inputCntGraph);
 
       //모든 그래프 삭제
       this.window.cy.elements().remove();
 
-      //그래프 생성
-      var vertex = [];
-
       //노드 생성
       for(var i = 0; i < inputCntGraph; i++){
-        var temp = { 
+        let maxRange: any = inputCntGraph*100;
+        let rangeX: any = Math.floor((Math.random()*maxRange)+1);
+        let rangeY: any = Math.floor((Math.random()*maxRange/2)+1);
+        this.window.cy.add({ 
           group: "nodes",
           data: {
             id: "n"+i
           },
           position: {
-            x: Math.floor((Math.random()*1000)+1),
-            y: Math.floor((Math.random()*1000)+1)
+            x: rangeX,
+            y: rangeY
           }
-        }
-        vertex.push(temp);
+        });//화면에 추가
         //console.log("nodeID:"+temp.data.id+" point("+temp.position.x+" "+temp.position.y+")");
       }
       //관계 생성
       for(var j = 0; j < inputCntGraph; j++){
-        var eTemp = {
-          group: "edges",
-          data: {
-            id: "e"+j,
-            source: "n"+Math.floor((Math.random()*+inputCntGraph-1)+1),//+inputCntGraph에서 +는 number로 형변환한다는 의미.
-            target: "n"+Math.floor((Math.random()*+inputCntGraph-1)+1)
-          }
+        let sourceNum = Math.floor((Math.random()*inputCntGraph-1)+1);
+        let targetNum = Math.floor((Math.random()*inputCntGraph-1)+1);
+        while(sourceNum === targetNum){
+          //console.log(sourceNum+"   "+targetNum);
+          targetNum = Math.floor((Math.random()*inputCntGraph-1)+1);
         }
-        vertex.push(eTemp);
         //console.log("edgeID:"+eTemp.data.id+" source:"+eTemp.data.source+" target:"+eTemp.data.target);
+        this.window.cy.add({
+            group: "edges",
+            data: {
+              id: "e"+j,
+              source: "n"+sourceNum,
+              target: "n"+targetNum
+            }
+          });//화면에 추가
       }
-      this.window.cy.add(vertex);//화면에 추가
-      this.window.cy.fit();//모든 노드가 생성된 영역에 맞게 화면 맞추기
+      this.window.cy.fit();//생성된 모든 노드가 영역에 맞게 화면 맞추기
     });
   }
 }
@@ -264,6 +268,5 @@ export class AppComponent {
 })
 export class InputNodeCntDialog{
   constructor(public dialogRef: MdDialogRef<InputNodeCntDialog>){
-
   }
 }
